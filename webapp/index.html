@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVZAP — Premium Do'kon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: { 300: '#fde68a', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309' },
+                        neon: { cyan: '#00ffff', green: '#39ff14', yellow: '#ffff00', pink: '#ff10f0' }
+                    },
+                    fontFamily: {
+                        display: ['Cinzel Decorative', 'serif'],
+                        body: ['Rajdhani', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --gold: #f59e0b;
+            --gold-light: #fbbf24;
+            --neon-c: #00ffff;
+            --neon-g: #39ff14;
+            --bg-dark: #050505;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg-dark);
+            font-family: 'Rajdhani', sans-serif;
+            color: #e5e7eb;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        /* GRID BG */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image:
+                linear-gradient(rgba(245,158,11,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(245,158,11,0.04) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none; z-index: 0;
+        }
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+        /* GLOW */
+        .glow-gold { box-shadow: 0 0 20px rgba(245,158,11,0.4), 0 0 40px rgba(245,158,11,0.2); }
+        .glow-cyan { box-shadow: 0 0 20px rgba(0,255,255,0.4); }
+        .glow-text { text-shadow: 0 0 20px rgba(245,158,11,0.8), 0 0 40px rgba(245,158,11,0.4); }
+        /* NEON BORDER */
+        .neon-border { border: 1px solid rgba(245,158,11,0.3); }
+        .neon-border:hover { border-color: var(--gold); box-shadow: 0 0 15px rgba(245,158,11,0.3); }
+        /* CARD */
+        .product-card {
+            background: linear-gradient(135deg, #0a0a0a 0%, #111111 50%, #0a0a0a 100%);
+            border: 1px solid rgba(245,158,11,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .product-card::before {
+            content: '';
+            position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(245,158,11,0.05), transparent);
+            transition: left 0.5s ease;
+        }
+        .product-card:hover::before { left: 100%; }
+        .product-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(245,158,11,0.2), 0 10px 40px rgba(0,0,0,0.5);
+            transform: translateY(-4px);
+        }
+        /* BTN */
+        .btn-gold {
+            background: linear-gradient(135deg, #b45309, #f59e0b, #fbbf24);
+            color: #000;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .btn-gold:hover {
+            box-shadow: 0 0 25px rgba(245,158,11,0.6);
+            transform: translateY(-2px);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            transition: all 0.3s;
+        }
+        .btn-outline:hover {
+            background: rgba(245,158,11,0.1);
+            box-shadow: 0 0 15px rgba(245,158,11,0.3);
+        }
+        /* HERO */
+        .hero-text { letter-spacing: 4px; }
+        /* BADGE */
+        .badge-new { background: linear-gradient(135deg, #00ffff20, #00ffff40); border: 1px solid #00ffff; color: #00ffff; }
+        .badge-hot { background: linear-gradient(135deg, #ff10f020, #ff10f040); border: 1px solid #ff10f0; color: #ff10f0; }
+        .badge-sale { background: linear-gradient(135deg, #39ff1420, #39ff1440); border: 1px solid #39ff14; color: #39ff14; }
+        /* LOADER */
+        .loader { animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* MODAL */
+        .modal-overlay {
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+        }
+        /* TOAST */
+        .toast {
+            animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s forwards;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+        /* PULSE */
+        .pulse-gold { animation: pulseGold 2s infinite; }
+        @keyframes pulseGold {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(245,158,11,0); }
+        }
+        /* NAV */
+        .nav-glass {
+            background: rgba(5,5,5,0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(245,158,11,0.2);
+        }
+        /* SCROLLING TEXT */
+        .marquee { animation: marquee 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        /* PRICE */
+        .price-tag { font-variant-numeric: tabular-nums; }
+        /* SIDEBAR */
+        .sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* STAR RATING */
+        .star { color: var(--gold); }
+        /* NUMBER INPUT */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button { opacity: 1; }
+        /* SEARCH */
+        .search-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(245,158,11,0.3);
+            color: white;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(245,158,11,0.2);
+        }
+        .search-input::placeholder { color: rgba(255,255,255,0.3); }
+        /* SELECT */
+        select {
+            background: #111;
+            color: white;
+            border: 1px solid rgba(245,158,11,0.3);
+            appearance: none;
+        }
+        select:focus { outline: none; border-color: var(--gold); }
+        /* TAG */
+        .tag { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+        /* CART BADGE */
+        .cart-badge {
+            background: linear-gradient(135deg, #ff10f0, #00ffff);
+            animation: pulseGold 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+<!-- ============ TOAST CONTAINER ============ -->
+<div id="toastContainer" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2"></div>
+
+<!-- ============ NAVBAR ============ -->
+<nav class="nav-glass fixed top-0 left-0 right-0 z-50">
+    <!-- Top Bar -->
+    <div class="border-b border-yellow-900/30 py-1 px-4">
+        <div class="max-w-7xl mx-auto overflow-hidden">
+            <p class="text-xs text-yellow-600/70 font-body whitespace-nowrap marquee">
+                ✨ EVZAP — Premium sifat, qulay narx &nbsp;&nbsp;&nbsp; 🚚 Bepul yetkazib berish 200,000 so'mdan yuqori &nbsp;&nbsp;&nbsp; 💎 Yangi mahsulotlar har kuni &nbsp;&nbsp;&nbsp; 🎁 Sovg'a va aksiyalar &nbsp;&nbsp;&nbsp; ⭐ 10,000+ mamnun mijoz
+            </p>
+        </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-600 to-yellow-400 flex items-center justify-center glow-gold">
+                <span class="text-black font-display text-xs font-bold">E</span>
+            </div>
+            <span class="font-display text-xl font-bold glow-text text-yellow-400">EVZAP</span>
+        </div>
+
+        <!-- Search -->
+        <div class="flex-1 max-w-md hidden md:block">
+            <div class="relative">
+                <input type="text" id="searchInput" placeholder="Mahsulot qidiring..." 
+                    class="search-input w-full py-2 px-4 pr-10 rounded-lg text-sm font-body"
+                    oninput="filterProducts()">
+                <svg class="absolute right-3 top-2.5 w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Right Actions -->
+        <div class="flex items-center gap-3">
+            <!-- Language -->
+            <select id="langSelect" onchange="changeLang(this.value)" 
+                class="text-xs rounded-lg px-2 py-1 cursor-pointer font-body">
+                <option value="uz">🇺🇿 UZ</option>
+                <option value="ru">🇷🇺 RU</option>
+                <option value="en">🇬🇧 EN</option>
+            </select>
+
+            <!-- Wishlist -->
+            <button onclick="toggleWishlist()" class="relative p-2 text-gray-400 hover:text-yellow-400 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+                <span id="wishlistBadge" class="hidden absolute -top-1 -right-1 cart-badge text-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+            </button>
+
+            <!-- Cart -->
+            <button onclick="toggleCart()" class="relative p-2 text-gray-400 hover:text-yellow-400 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <span id="cartBadge" class="hidden absolute -top-1 -right-1 cart-badge text-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+            </button>
+
+            <!-- Mobile Menu -->
+            <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-gray-400 hover:text-yellow-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Category Nav -->
+    <div class="border-t border-yellow-900/20 px-4 overflow-x-auto">
+        <div class="max-w-7xl mx-auto flex gap-1 py-2">
+            <button onclick="filterCategory('all')" id="cat-all"
+                class="cat-btn px-4 py-1.5 rounded-full text-xs font-body font-semibold whitespace-nowrap transition-all btn-gold">
+                🌟 Hammasi
+            </button>
+            <button onclick="filterCategory('electronics')" id="cat-electronics"
+                class="cat-btn px-4 py-1.5 rounded-full text-xs font-body font-semibold whitespace-nowrap transition-all btn-outline">
+                📱 Elektronika
+            </button>
+            <button onclick="filterCategory('clothing')" id="cat-clothing"
+                class="cat-btn px-4 py-1.5 rounded-full text-xs font-body font-semibold whitespace-nowrap transition-all btn-outline">
+                👔 Kiyim
+            </button>
+            <button onclick="filterCategory('food')" id="cat-food"
+                class="cat-btn px-4 py-1.5 rounded-full text-xs font-body font-semibold whitespace-nowrap transition-all btn-outline">
+                🍎 Oziq-ovqat
+            </button>
+            <button onclick="filterCategory('home')" id="cat-home"
+                class="cat-btn px-4 py-1.5 rounded-full text-xs font-body font-semibold whitespace-nowrap transition-all btn-outline">
+                🏠 Uy uchun
+            </button>
+            <button onclick="filterCategory('sports')" id="cat-sports"
+                class="cat-btn px-4 py-1.5 rounded-full text-xs font-body font-semibold whitespace-nowrap transition-all btn-outline">
+                ⚽ Sport
+            </button>
+            <button onclick="filterCategory('beauty')" id="cat-beauty"
+                class="cat-btn px-4 py-1.5 rounded-full text-xs font-body font-semibold whitespace-nowrap transition-all btn-outline">
+                💄 Go'zallik
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-32">
+    <!-- BG Effects -->
+    <div class="absolute inset-0">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-600/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-yellow-900/5 rounded-full blur-[100px]"></div>
+    </div>
+    
+    <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+        <!-- Pre-title -->
+        <p class="text-yellow-600/70 font-body text-sm tracking-[8px] uppercase mb-4">Premium Online Do'kon</p>
+        
+        <!-- Main Title -->
+        <h1 class="font-display text-5xl md:text-8xl font-black mb-6 leading-none">
+            <span class="text-white">EV</span><span class="text-yellow-400 glow-text">ZAP</span>
+        </h1>
+        
+        <!-- Subtitle -->
+        <div class="flex items-center justify-center gap-4 mb-8">
+            <div class="h-px flex-1 max-w-[100px] bg-gradient-to-r from-transparent to-yellow-600/50"></div>
+            <p class="font-body text-gray-400 text-lg tracking-widest uppercase">Sifat va Ishonch</p>
+            <div class="h-px flex-1 max-w-[100px] bg-gradient-to-l from-transparent to-yellow-600/50"></div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="flex justify-center gap-8 mb-10">
+            <div class="text-center">
+                <p class="font-display text-2xl text-yellow-400">10K+</p>
+                <p class="text-xs text-gray-500 font-body">Mijozlar</p>
+            </div>
+            <div class="w-px bg-yellow-900/50"></div>
+            <div class="text-center">
+                <p class="font-display text-2xl text-yellow-400">500+</p>
+                <p class="text-xs text-gray-500 font-body">Mahsulotlar</p>
+            </div>
+            <div class="w-px bg-yellow-900/50"></div>
+            <div class="text-center">
+                <p class="font-display text-2xl text-yellow-400">4.9★</p>
+                <p class="text-xs text-gray-500 font-body">Reyting</p>
+            </div>
+        </div>
+        
+        <!-- CTA Buttons -->
+        <div class="flex flex-wrap justify-center gap-4">
+            <button onclick="scrollToProducts()" 
+                class="btn-gold px-8 py-3 rounded-full font-body font-bold text-sm tracking-wider uppercase glow-gold pulse-gold">
+                🛍 Xarid Qilish
+            </button>
+            <a href="https://t.me/evzap_bot" target="_blank"
+                class="btn-outline px-8 py-3 rounded-full font-body font-bold text-sm tracking-wider uppercase">
+                📱 Telegram Bot
+            </a>
+        </div>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+        <p class="text-xs text-gray-600 font-body tracking-widest">SCROLL</p>
+        <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+    </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="py-16 px-4 relative z-10">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="neon-border rounded-xl p-5 text-center transition-all hover:glow-gold bg-black/40">
+            <div class="text-3xl mb-2">🚚</div>
+            <p class="font-body font-semibold text-yellow-400 text-sm" data-lang="delivery_title">Bepul Yetkazish</p>
+            <p class="font-body text-xs text-gray-500 mt-1" data-lang="delivery_desc">200,000 so'mdan yuqori</p>
+        </div>
+        <div class="neon-border rounded-xl p-5 text-center transition-all hover:glow-gold bg-black/40">
+            <div class="text-3xl mb-2">🔒</div>
+            <p class="font-body font-semibold text-yellow-400 text-sm" data-lang="secure_title">Xavfsiz To'lov</p>
+            <p class="font-body text-xs text-gray-500 mt-1" data-lang="secure_desc">100% kafolatlangan</p>
+        </div>
+        <div class="neon-border rounded-xl p-5 text-center transition-all hover:glow-gold bg-black/40">
+            <div class="text-3xl mb-2">↩️</div>
+            <p class="font-body font-semibold text-yellow-400 text-sm" data-lang="return_title">14 kun Qaytarish</p>
+            <p class="font-body text-xs text-gray-500 mt-1" data-lang="return_desc">Bepul qaytarish</p>
+        </div>
+        <div class="neon-border rounded-xl p-5 text-center transition-all hover:glow-gold bg-black/40">
+            <div class="text-3xl mb-2">💬</div>
+            <p class="font-body font-semibold text-yellow-400 text-sm" data-lang="support_title">24/7 Qo'llab-quvvatlash</p>
+            <p class="font-body text-xs text-gray-500 mt-1" data-lang="support_desc">Doim yordam tayyormiz</p>
+        </div>
+    </div>
+</section>
+
+<!-- ============ PRODUCTS ============ -->
+<section id="products" class="py-16 px-4 relative z-10">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex items-end justify-between mb-10">
+            <div>
+                <p class="text-yellow-600/70 font-body text-xs tracking-[6px] uppercase mb-2">Kolleksiya</p>
+                <h2 class="font-display text-3xl text-white">
+                    <span class="text-yellow-400">Premium</span> Mahsulotlar
+                </h2>
+            </div>
+            <!-- Sort -->
+            <select id="sortSelect" onchange="sortProducts(this.value)" 
+                class="text-xs rounded-lg px-3 py-2 font-body cursor-pointer hidden md:block">
+                <option value="default">Standart</option>
+                <option value="price-asc">Narx: Arzon → Qimmat</option>
+                <option value="price-desc">Narx: Qimmat → Arzon</option>
+                <option value="name">Nom bo'yicha</option>
+            </select>
+        </div>
+        
+        <!-- Grid -->
+        <div id="productsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <!-- Products rendered by JS -->
+        </div>
+        
+        <!-- No results -->
+        <div id="noResults" class="hidden text-center py-20">
+            <p class="text-6xl mb-4">🔍</p>
+            <p class="font-display text-xl text-gray-500">Mahsulot topilmadi</p>
+        </div>
+    </div>
+</section>
+
+<!-- ============ CART SIDEBAR ============ -->
+<div id="cartOverlay" class="hidden fixed inset-0 modal-overlay z-40" onclick="toggleCart()"></div>
+<div id="cartSidebar" class="sidebar fixed right-0 top-0 bottom-0 w-full max-w-md bg-[#080808] border-l border-yellow-900/30 z-50 flex flex-col translate-x-full">
+    <!-- Header -->
+    <div class="p-6 border-b border-yellow-900/30 flex items-center justify-between">
+        <h2 class="font-display text-xl text-yellow-400">🛒 Savatcha</h2>
+        <button onclick="toggleCart()" class="text-gray-500 hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    
+    <!-- Items -->
+    <div id="cartItems" class="flex-1 overflow-y-auto p-6 space-y-4">
+        <div id="cartEmpty" class="text-center py-16">
+            <p class="text-6xl mb-4">🛒</p>
+            <p class="font-body text-gray-500">Savat bo'sh</p>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div id="cartFooter" class="hidden p-6 border-t border-yellow-900/30 space-y-4">
+        <div class="flex justify-between items-center">
+            <span class="font-body text-gray-400">Jami:</span>
+            <span id="cartTotal" class="font-display text-xl text-yellow-400 price-tag">0 so'm</span>
+        </div>
+        <button onclick="checkout()" class="btn-gold w-full py-3 rounded-xl font-body font-bold tracking-wider uppercase glow-gold">
+            💳 Buyurtma Berish
+        </button>
+        <button onclick="clearCart()" class="btn-outline w-full py-2.5 rounded-xl font-body text-sm">
+            🗑 Savatni Tozalash
+        </button>
+    </div>
+</div>
+
+<!-- ============ WISHLIST SIDEBAR ============ -->
+<div id="wishlistOverlay" class="hidden fixed inset-0 modal-overlay z-40" onclick="toggleWishlist()"></div>
+<div id="wishlistSidebar" class="sidebar fixed right-0 top-0 bottom-0 w-full max-w-md bg-[#080808] border-l border-yellow-900/30 z-50 flex flex-col translate-x-full">
+    <div class="p-6 border-b border-yellow-900/30 flex items-center justify-between">
+        <h2 class="font-display text-xl text-yellow-400">❤️ Sevimlilar</h2>
+        <button onclick="toggleWishlist()" class="text-gray-500 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <div id="wishlistItems" class="flex-1 overflow-y-auto p-6">
+        <div id="wishlistEmpty" class="text-center py-16">
+            <p class="text-6xl mb-4">❤️</p>
+            <p class="font-body text-gray-500">Sevimlilar bo'sh</p>
+        </div>
+    </div>
+</div>
+
+<!-- ============ PRODUCT MODAL ============ -->
+<div id="productModal" class="hidden fixed inset-0 modal-overlay z-40 flex items-center justify-center p-4" onclick="closeModal(event)">
+    <div class="bg-[#0a0a0a] border border-yellow-900/30 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative" onclick="e=>e.stopPropagation()">
+        <button onclick="document.getElementById('productModal').classList.add('hidden')" 
+            class="absolute top-4 right-4 text-gray-500 hover:text-white z-10 bg-black/50 rounded-full p-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<!-- ============ CHECKOUT MODAL ============ -->
+<div id="checkoutModal" class="hidden fixed inset-0 modal-overlay z-50 flex items-center justify-center p-4">
+    <div class="bg-[#0a0a0a] border border-yellow-900/30 rounded-2xl max-w-md w-full p-8">
+        <h2 class="font-display text-2xl text-yellow-400 mb-6">📋 Buyurtma</h2>
+        <div id="checkoutSummary" class="mb-6 space-y-2"></div>
+        <div class="space-y-4 mb-6">
+            <input type="text" id="orderName" placeholder="Ismingiz *" 
+                class="search-input w-full py-3 px-4 rounded-xl font-body text-sm" required>
+            <input type="tel" id="orderPhone" placeholder="Telefon raqam * (+998...)" 
+                class="search-input w-full py-3 px-4 rounded-xl font-body text-sm" required>
+            <input type="text" id="orderAddress" placeholder="Yetkazish manzili *" 
+                class="search-input w-full py-3 px-4 rounded-xl font-body text-sm" required>
+            <textarea id="orderComment" placeholder="Izoh (ixtiyoriy)" rows="2"
+                class="search-input w-full py-3 px-4 rounded-xl font-body text-sm resize-none"></textarea>
+        </div>
+        <div class="flex gap-3">
+            <button onclick="submitOrder()" class="btn-gold flex-1 py-3 rounded-xl font-body font-bold tracking-wider">✅ Tasdiqlash</button>
+            <button onclick="document.getElementById('checkoutModal').classList.add('hidden')" 
+                class="btn-outline px-6 py-3 rounded-xl font-body">❌</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============ TELEGRAM BOT SECTION ============ -->
+<section class="py-20 px-4 relative z-10">
+    <div class="max-w-4xl mx-auto">
+        <div class="neon-border rounded-2xl p-10 text-center bg-gradient-to-br from-black via-yellow-950/10 to-black relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-yellow-600/5 via-transparent to-cyan-600/5"></div>
+            <div class="relative z-10">
+                <div class="text-6xl mb-4">🤖</div>
+                <h2 class="font-display text-3xl text-white mb-3">
+                    <span class="text-yellow-400">Telegram</span> Bot
+                </h2>
+                <p class="font-body text-gray-400 mb-8 max-w-lg mx-auto">
+                    Bizning Telegram botimiz orqali mahsulotlarni ko'ring, buyurtma bering va status kuzating. 3 tilda ishlaydi!
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <span class="tag px-4 py-2 rounded-full text-sm font-body text-yellow-400">✅ Mahsulotlar katalogi</span>
+                    <span class="tag px-4 py-2 rounded-full text-sm font-body text-yellow-400">✅ Savat tizimi</span>
+                    <span class="tag px-4 py-2 rounded-full text-sm font-body text-yellow-400">✅ 3 til: UZ/RU/EN</span>
+                    <span class="tag px-4 py-2 rounded-full text-sm font-body text-yellow-400">✅ Admin panel</span>
+                    <span class="tag px-4 py-2 rounded-full text-sm font-body text-yellow-400">✅ Buyurtma holati</span>
+                    <span class="tag px-4 py-2 rounded-full text-sm font-body text-yellow-400">✅ Xabarnomalar</span>
+                </div>
+                <a href="https://t.me/evzap_bot" target="_blank"
+                    class="btn-gold inline-block px-10 py-4 rounded-full font-body font-bold text-sm tracking-wider uppercase glow-gold">
+                    📱 Botni Ochish
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t border-yellow-900/20 py-12 px-4 relative z-10">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-600 to-yellow-400 flex items-center justify-center">
+                        <span class="text-black font-display text-xs font-bold">E</span>
+                    </div>
+                    <span class="font-display text-lg font-bold text-yellow-400">EVZAP</span>
+                </div>
+                <p class="font-body text-xs text-gray-500 leading-relaxed">Premium mahsulotlar va sifatli xizmat. Sizning ishonchli do'koningiz.</p>
+            </div>
+            <div>
+                <h4 class="font-body font-bold text-yellow-600 text-sm mb-4 tracking-widest uppercase">Sahifalar</h4>
+                <ul class="space-y-2 text-xs text-gray-500 font-body">
+                    <li><a href="#" class="hover:text-yellow-400 transition-colors">Katalog</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition-colors">Aksiyalar</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition-colors">Yangiliklar</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition-colors">Biz haqimizda</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-body font-bold text-yellow-600 text-sm mb-4 tracking-widest uppercase">Aloqa</h4>
+                <ul class="space-y-2 text-xs text-gray-500 font-body">
+                    <li>📞 +998 90 123 45 67</li>
+                    <li>📧 info@evzap.uz</li>
+                    <li>📍 Toshkent, O'zbekiston</li>
+                    <li>⏰ 9:00 - 22:00</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-body font-bold text-yellow-600 text-sm mb-4 tracking-widest uppercase">Ijtimoiy Tarmoqlar</h4>
+                <div class="flex gap-3">
+                    <a href="#" class="w-8 h-8 neon-border rounded-lg flex items-center justify-center text-sm hover:glow-gold transition-all">📱</a>
+                    <a href="#" class="w-8 h-8 neon-border rounded-lg flex items-center justify-center text-sm hover:glow-gold transition-all">📸</a>
+                    <a href="#" class="w-8 h-8 neon-border rounded-lg flex items-center justify-center text-sm hover:glow-gold transition-all">▶️</a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-yellow-900/20 pt-6 text-center">
+            <p class="font-body text-xs text-gray-600">© 2024 EVZAP. Barcha huquqlar himoyalangan.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- ============ JAVASCRIPT ============ -->
+<script>
+// ============================================================
+// MA'LUMOTLAR
+// ============================================================
+const PRODUCTS_DATA = [
+    { id:1, category:'electronics', badge:'new', rating:4.8, reviews:124,
+      name:{uz:'Samsung Galaxy A54',ru:'Samsung Galaxy A54',en:'Samsung Galaxy A54'},
+      desc:{uz:'6.4" AMOLED, 128GB, 50MP kamera, 5000mAh batareya',ru:'6.4" AMOLED, 128GB, камера 50МП, аккумулятор 5000мАч',en:'6.4" AMOLED, 128GB, 50MP camera, 5000mAh battery'},
+      price:3299000, oldPrice:3799000, emoji:'📱' },
+    { id:2, category:'electronics', badge:'hot', rating:4.9, reviews:89,
+      name:{uz:'Apple AirPods Pro',ru:'Apple AirPods Pro',en:'Apple AirPods Pro'},
+      desc:{uz:'Aktiv shovqin bekor qilish, 30 soat batareya',ru:'Активное шумоподавление, 30 часов работы',en:'Active noise cancellation, 30h battery'},
+      price:1899000, oldPrice:null, emoji:'🎧' },
+    { id:3, category:'clothing', badge:'sale', rating:4.7, reviews:215,
+      name:{uz:'Nike Air Max 270',ru:'Nike Air Max 270',en:'Nike Air Max 270'},
+      desc:{uz:'Qulay sport poyabzal, o\'lchamlar: 36-46',ru:'Удобные кроссовки, размеры: 36-46',en:'Comfortable sports shoes, sizes: 36-46'},
+      price:899000, oldPrice:1199000, emoji:'👟' },
+    { id:4, category:'clothing', badge:null, rating:4.6, reviews:67,
+      name:{uz:'Adidas Hoodie',ru:'Adidas Худи',en:'Adidas Hoodie'},
+      desc:{uz:'Yumshoq paxta, o\'lchamlar: S, M, L, XL, XXL',ru:'Мягкий хлопок, размеры: S, M, L, XL, XXL',en:'Soft cotton, sizes: S, M, L, XL, XXL'},
+      price:459000, oldPrice:null, emoji:'👕' },
+    { id:5, category:'food', badge:'new', rating:5.0, reviews:43,
+      name:{uz:'Premium Asal',ru:'Премиум Мёд',en:'Premium Honey'},
+      desc:{uz:'Tabiiy tog\' asali, 500g, sertifikatlangan',ru:'Натуральный горный мёд, 500г',en:'Natural mountain honey, 500g'},
+      price:89000, oldPrice:null, emoji:'🍯' },
+    { id:6, category:'food', badge:null, rating:4.8, reviews:91,
+      name:{uz:'Organik Yong\'oq',ru:'Органические Орехи',en:'Organic Nuts'},
+      desc:{uz:'Aralash yong\'oqlar to\'plami, 1kg',ru:'Смесь орехов, 1кг',en:'Mixed nuts collection, 1kg'},
+      price:129000, oldPrice:149000, emoji:'🥜' },
+    { id:7, category:'home', badge:'hot', rating:4.7, reviews:38,
+      name:{uz:'Philips Hue Lampa',ru:'Лампа Philips Hue',en:'Philips Hue Bulb'},
+      desc:{uz:'Smart lampa, 16M rang, Wi-Fi boshqaruv',ru:'Умная лампа, 16М цветов',en:'Smart bulb, 16M colors, Wi-Fi'},
+      price:199000, oldPrice:null, emoji:'💡' },
+    { id:8, category:'sports', badge:'new', rating:4.5, reviews:156,
+      name:{uz:'Fitness Tracker',ru:'Фитнес Трекер',en:'Fitness Tracker'},
+      desc:{uz:'Yurak urishi, uyqu monitoring, 7 kun batareya',ru:'Пульс, мониторинг сна, 7 дней',en:'Heart rate, sleep monitoring, 7 days'},
+      price:349000, oldPrice:449000, emoji:'⌚' },
+    { id:9, category:'beauty', badge:'hot', rating:4.9, reviews:28,
+      name:{uz:'La Mer Krem',ru:'Крем La Mer',en:'La Mer Cream'},
+      desc:{uz:'Regeneratsiya kremi, 60ml',ru:'Регенерирующий крем, 60мл',en:'Regenerating cream, 60ml'},
+      price:2299000, oldPrice:null, emoji:'✨' },
+    { id:10, category:'electronics', badge:'new', rating:4.9, reviews:72,
+      name:{uz:'iPad Pro 11"',ru:'iPad Pro 11"',en:'iPad Pro 11"'},
+      desc:{uz:'M2 chip, 256GB, Liquid Retina ekran',ru:'Чип M2, 256ГБ, Liquid Retina',en:'M2 chip, 256GB, Liquid Retina'},
+      price:8999000, oldPrice:9499000, emoji:'📊' },
+];
+
+const DEMO_CART = [
+    { id: 1, qty: 1 },
+    { id: 2, qty: 1 },
+    { id: 3, qty: 1 },
+    { id: 5, qty: 2 },
+];
+
+function getInitialCart() {
+    const saved = localStorage.getItem('evzap_cart');
+    if (saved) {
+        const cart = JSON.parse(saved);
+        if (cart.length > 0) return cart;
+    }
+    return DEMO_CART.map(item => ({ ...item }));
+}
+
+// ============================================================
+// HOLAT
+// ============================================================
+let state = {
+    lang: localStorage.getItem('evzap_lang') || 'uz',
+    cart: getInitialCart(),
+    wishlist: JSON.parse(localStorage.getItem('evzap_wishlist') || '[]'),
+    category: 'all',
+    search: '',
+    sort: 'default',
+    cartOpen: false,
+    wishlistOpen: false,
+};
+
+// ============================================================
+// TIL
+// ============================================================
+const LANG_DATA = {
+    uz: {
+        delivery_title: 'Bepul Yetkazish', delivery_desc: '200,000 so\'mdan yuqori',
+        secure_title: 'Xavfsiz To\'lov', secure_desc: '100% kafolatlangan',
+        return_title: '14 kun Qaytarish', return_desc: 'Bepul qaytarish',
+        support_title: '24/7 Qo\'llab-quvvatlash', support_desc: 'Doim yordam tayyormiz',
+    },
+    ru: {
+        delivery_title: 'Бесплатная доставка', delivery_desc: 'от 200,000 сум',
+        secure_title: 'Безопасная оплата', secure_desc: '100% гарантия',
+        return_title: 'Возврат 14 дней', return_desc: 'Бесплатный возврат',
+        support_title: 'Поддержка 24/7', support_desc: 'Всегда готовы помочь',
+    },
+    en: {
+        delivery_title: 'Free Delivery', delivery_desc: 'over 200,000 sum',
+        secure_title: 'Secure Payment', secure_desc: '100% guaranteed',
+        return_title: '14 Day Returns', return_desc: 'Free returns',
+        support_title: '24/7 Support', support_desc: 'Always ready to help',
+    }
+};
+
+function changeLang(lang) {
+    state.lang = lang;
+    localStorage.setItem('evzap_lang', lang);
+    document.querySelectorAll('[data-lang]').forEach(el => {
+        const key = el.getAttribute('data-lang');
+        if (LANG_DATA[lang] && LANG_DATA[lang][key]) el.textContent = LANG_DATA[lang][key];
+    });
+    renderProducts();
+    renderCart();
+    renderWishlist();
+    document.getElementById('langSelect').value = lang;
+}
+
+// ============================================================
+// FORMAT
+// ============================================================
+function formatPrice(n) {
+    return n.toLocaleString('uz-UZ') + " so'm";
+}
+
+function getStars(rating) {
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5;
+    let s = '';
+    for (let i = 0; i < full; i++) s += '⭐';
+    return s;
+}
+
+function getBadge(badge) {
+    if (!badge) return '';
+    const badges = {
+        new: '<span class="badge-new text-[10px] px-2 py-0.5 rounded-full font-body font-bold uppercase tracking-wider">NEW</span>',
+        hot: '<span class="badge-hot text-[10px] px-2 py-0.5 rounded-full font-body font-bold uppercase tracking-wider">HOT</span>',
+        sale: '<span class="badge-sale text-[10px] px-2 py-0.5 rounded-full font-body font-bold uppercase tracking-wider">SALE</span>',
+    };
+    return badges[badge] || '';
+}
+
+// ============================================================
+// MAHSULOTLAR
+// ============================================================
+function getFilteredProducts() {
+    let products = [...PRODUCTS_DATA];
+    if (state.category !== 'all') products = products.filter(p => p.category === state.category);
+    if (state.search) {
+        const q = state.search.toLowerCase();
+        products = products.filter(p =>
+            p.name[state.lang].toLowerCase().includes(q) ||
+            p.desc[state.lang].toLowerCase().includes(q)
+        );
+    }
+    if (state.sort === 'price-asc') products.sort((a, b) => a.price - b.price);
+    else if (state.sort === 'price-desc') products.sort((a, b) => b.price - a.price);
+    else if (state.sort === 'name') products.sort((a, b) => a.name[state.lang].localeCompare(b.name[state.lang]));
+    return products;
+}
+
+function renderProducts() {
+    const grid = document.getElementById('productsGrid');
+    const noRes = document.getElementById('noResults');
+    const products = getFilteredProducts();
+    
+    if (products.length === 0) {
+        grid.innerHTML = '';
+        noRes.classList.remove('hidden');
+        return;
+    }
+    noRes.classList.add('hidden');
+    
+    grid.innerHTML = products.map(p => {
+        const inCart = state.cart.some(i => i.id === p.id);
+        const inWishlist = state.wishlist.includes(p.id);
+        const discount = p.oldPrice ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+        
+        return `
+        <div class="product-card rounded-xl overflow-hidden flex flex-col">
+            <!-- Image -->
+            <div class="relative aspect-square bg-gradient-to-br from-yellow-950/20 to-black flex items-center justify-center group">
+                <span class="text-7xl">${p.emoji}</span>
+                
+                <!-- Badges -->
+                <div class="absolute top-2 left-2 flex gap-1 flex-wrap">
+                    ${getBadge(p.badge)}
+                    ${discount ? `<span class="badge-sale text-[10px] px-2 py-0.5 rounded-full font-body font-bold">-${discount}%</span>` : ''}
+                </div>
+                
+                <!-- Wishlist -->
+                <button onclick="toggleWishlistItem(${p.id})" 
+                    class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center transition-transform hover:scale-110"
+                    title="Sevimlilarga qo'shish">
+                    <span class="${inWishlist ? 'text-red-500' : 'text-gray-500'}">❤️</span>
+                </button>
+                
+                <!-- Quick View -->
+                <button onclick="openProductModal(${p.id})"
+                    class="absolute inset-0 bg-black/0 hover:bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                    <span class="bg-yellow-500 text-black text-xs font-body font-bold px-3 py-1.5 rounded-full">Ko'rish</span>
+                </button>
+            </div>
+            
+            <!-- Info -->
+            <div class="p-3 flex flex-col flex-1">
+                <p class="font-body text-xs text-gray-500 mb-0.5">${p.name[state.lang]}</p>
+                <p class="font-body text-[11px] text-gray-600 mb-2 line-clamp-2 flex-1">${p.desc[state.lang]}</p>
+                
+                <!-- Rating -->
+                <div class="flex items-center gap-1 mb-2">
+                    <span class="text-[10px]">${getStars(p.rating)}</span>
+                    <span class="text-[10px] text-gray-600 font-body">(${p.reviews})</span>
+                </div>
+                
+                <!-- Price -->
+                <div class="mb-3">
+                    <p class="font-display text-base text-yellow-400 price-tag">${formatPrice(p.price)}</p>
+                    ${p.oldPrice ? `<p class="font-body text-xs text-gray-600 line-through price-tag">${formatPrice(p.oldPrice)}</p>` : ''}
+                </div>
+                
+                <!-- Add to Cart -->
+                <button onclick="addToCart(${p.id})" 
+                    class="${inCart ? 'btn-outline' : 'btn-gold'} w-full py-2 rounded-lg font-body text-xs font-bold tracking-wider transition-all">
+                    ${inCart ? '✅ Savatda' : '🛒 Savatga'}
+                </button>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+// ============================================================
+// SAVAT
+// ============================================================
+function addToCart(id) {
+    const existing = state.cart.find(i => i.id === id);
+    if (existing) {
+        existing.qty++;
+    } else {
+        state.cart.push({ id, qty: 1 });
+    }
+    saveCart();
+    renderCart();
+    renderProducts();
+    updateBadges();
+    showToast('✅ Savatga qo\'shildi!', 'gold');
+}
+
+function removeFromCart(id) {
+    state.cart = state.cart.filter(i => i.id !== id);
+    saveCart();
+    renderCart();
+    renderProducts();
+    updateBadges();
+}
+
+function updateQty(id, delta) {
+    const item = state.cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty = Math.max(1, item.qty + delta);
+    saveCart();
+    renderCart();
+}
+
+function clearCart() {
+    state.cart = [];
+    saveCart();
+    renderCart();
+    renderProducts();
+    updateBadges();
+}
+
+function saveCart() {
+    localStorage.setItem('evzap_cart', JSON.stringify(state.cart));
+}
+
+function getCartTotal() {
+    return state.cart.reduce((sum, item) => {
+        const p = PRODUCTS_DATA.find(x => x.id === item.id);
+        return sum + (p ? p.price * item.qty : 0);
+    }, 0);
+}
+
+function renderCart() {
+    const container = document.getElementById('cartItems');
+    const empty = document.getElementById('cartEmpty');
+    const footer = document.getElementById('cartFooter');
+    const totalEl = document.getElementById('cartTotal');
+    
+    if (state.cart.length === 0) {
+        empty.classList.remove('hidden');
+        footer.classList.add('hidden');
+        container.innerHTML = '';
+        container.appendChild(empty);
+        return;
+    }
+    
+    empty.classList.add('hidden');
+    footer.classList.remove('hidden');
+    totalEl.textContent = formatPrice(getCartTotal());
+    
+    container.innerHTML = state.cart.map(item => {
+        const p = PRODUCTS_DATA.find(x => x.id === item.id);
+        if (!p) return '';
+        return `
+        <div class="flex gap-3 neon-border rounded-xl p-3 bg-black/20">
+            <div class="w-12 h-12 rounded-lg bg-yellow-950/20 flex items-center justify-center text-2xl flex-shrink-0">${p.emoji}</div>
+            <div class="flex-1 min-w-0">
+                <p class="font-body text-sm text-white truncate">${p.name[state.lang]}</p>
+                <p class="font-display text-sm text-yellow-400 price-tag">${formatPrice(p.price)}</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <button onclick="updateQty(${p.id}, -1)" class="w-6 h-6 rounded bg-yellow-900/30 text-yellow-400 text-xs hover:bg-yellow-800/50 transition-colors">−</button>
+                    <span class="font-body text-sm text-white">${item.qty}</span>
+                    <button onclick="updateQty(${p.id}, 1)" class="w-6 h-6 rounded bg-yellow-900/30 text-yellow-400 text-xs hover:bg-yellow-800/50 transition-colors">+</button>
+                </div>
+            </div>
+            <button onclick="removeFromCart(${p.id})" class="text-gray-600 hover:text-red-400 transition-colors self-start">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        `;
+    }).join('');
+}
+
+// ============================================================
+// WISHLIST
+// ============================================================
+function toggleWishlistItem(id) {
+    const idx = state.wishlist.indexOf(id);
+    if (idx >= 0) {
+        state.wishlist.splice(idx, 1);
+        showToast('💔 Sevimlilardan o\'chirildi', 'cyan');
+    } else {
+        state.wishlist.push(id);
+        showToast('❤️ Sevimlilarga qo\'shildi!', 'gold');
+    }
+    localStorage.setItem('evzap_wishlist', JSON.stringify(state.wishlist));
+    renderProducts();
+    renderWishlist();
+    updateBadges();
+}
+
+function renderWishlist() {
+    const container = document.getElementById('wishlistItems');
+    const empty = document.getElementById('wishlistEmpty');
+    
+    if (state.wishlist.length === 0) {
+        container.innerHTML = '';
+        empty.classList.remove('hidden');
+        container.appendChild(empty);
+        return;
+    }
+    empty.classList.add('hidden');
+    
+    container.innerHTML = state.wishlist.map(id => {
+        const p = PRODUCTS_DATA.find(x => x.id === id);
+        if (!p) return '';
+        return `
+        <div class="flex gap-3 neon-border rounded-xl p-3 bg-black/20 mb-3">
+            <div class="w-14 h-14 rounded-lg bg-yellow-950/20 flex items-center justify-center text-3xl">${p.emoji}</div>
+            <div class="flex-1">
+                <p class="font-body text-sm text-white">${p.name[state.lang]}</p>
+                <p class="font-display text-sm text-yellow-400">${formatPrice(p.price)}</p>
+                <button onclick="addToCart(${p.id})" class="btn-gold mt-2 px-3 py-1 rounded-lg text-xs font-body font-bold">🛒 Savatga</button>
+            </div>
+            <button onclick="toggleWishlistItem(${p.id})" class="text-red-500 hover:text-gray-500 transition-colors self-start">❤️</button>
+        </div>
+        `;
+    }).join('');
+}
+
+// ============================================================
+// SIDEBARS
+// ============================================================
+function toggleCart() {
+    state.cartOpen = !state.cartOpen;
+    const sidebar = document.getElementById('cartSidebar');
+    const overlay = document.getElementById('cartOverlay');
+    if (state.cartOpen) {
+        sidebar.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    } else {
+        sidebar.classList.add('translate-x-full');
+        overlay.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+}
+
+function toggleWishlist() {
+    state.wishlistOpen = !state.wishlistOpen;
+    const sidebar = document.getElementById('wishlistSidebar');
+    const overlay = document.getElementById('wishlistOverlay');
+    if (state.wishlistOpen) {
+        sidebar.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    } else {
+        sidebar.classList.add('translate-x-full');
+        overlay.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function openProductModal(id) {
+    const p = PRODUCTS_DATA.find(x => x.id === id);
+    if (!p) return;
+    const inCart = state.cart.some(i => i.id === p.id);
+    const discount = p.oldPrice ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
+    
+    document.getElementById('modalContent').innerHTML = `
+    <div class="p-8">
+        <div class="flex gap-6 mb-6">
+            <div class="w-32 h-32 rounded-2xl bg-gradient-to-br from-yellow-950/30 to-black flex items-center justify-center text-7xl flex-shrink-0 neon-border">
+                ${p.emoji}
+            </div>
+            <div class="flex-1">
+                <div class="flex items-start justify-between gap-2">
+                    <div>
+                        <p class="text-xs text-yellow-600/70 font-body uppercase tracking-widest mb-1">${p.category}</p>
+                        <h3 class="font-display text-xl text-white mb-2">${p.name[state.lang]}</h3>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="text-sm">${getStars(p.rating)}</span>
+                            <span class="font-body text-sm text-gray-400">${p.rating} (${p.reviews} sharh)</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">${getBadge(p.badge)} ${discount ? `<span class="badge-sale text-[10px] px-2 py-0.5 rounded-full font-body font-bold">-${discount}%</span>` : ''}</div>
+                </div>
+                <div class="flex items-end gap-3">
+                    <p class="font-display text-2xl text-yellow-400 price-tag">${formatPrice(p.price)}</p>
+                    ${p.oldPrice ? `<p class="font-body text-sm text-gray-600 line-through price-tag mb-0.5">${formatPrice(p.oldPrice)}</p>` : ''}
+                </div>
+            </div>
+        </div>
+        
+        <div class="neon-border rounded-xl p-4 mb-6 bg-black/20">
+            <p class="font-body text-sm text-gray-300 leading-relaxed">${p.desc[state.lang]}</p>
+        </div>
+        
+        <div class="flex gap-3">
+            <button onclick="addToCart(${p.id}); document.getElementById('productModal').classList.add('hidden');" 
+                class="${inCart ? 'btn-outline' : 'btn-gold'} flex-1 py-3 rounded-xl font-body font-bold tracking-wider">
+                ${inCart ? '✅ Savatga qo\'shildi' : '🛒 Savatga qo\'shish'}
+            </button>
+            <button onclick="toggleWishlistItem(${p.id})"
+                class="btn-outline px-4 py-3 rounded-xl text-xl">
+                ${state.wishlist.includes(p.id) ? '❤️' : '🤍'}
+            </button>
+        </div>
+    </div>
+    `;
+    document.getElementById('productModal').classList.remove('hidden');
+}
+
+function closeModal(event) {
+    if (event.target.id === 'productModal') {
+        document.getElementById('productModal').classList.add('hidden');
+    }
+}
+
+// ============================================================
+// CHECKOUT
+// ============================================================
+function checkout() {
+    if (state.cart.length === 0) return;
+    toggleCart();
+    
+    const summary = document.getElementById('checkoutSummary');
+    summary.innerHTML = state.cart.map(item => {
+        const p = PRODUCTS_DATA.find(x => x.id === item.id);
+        if (!p) return '';
+        return `<div class="flex justify-between text-sm font-body">
+            <span class="text-gray-400">${p.emoji} ${p.name[state.lang]} x${item.qty}</span>
+            <span class="text-yellow-400 price-tag">${formatPrice(p.price * item.qty)}</span>
+        </div>`;
+    }).join('') + `
+    <div class="border-t border-yellow-900/20 pt-2 mt-2 flex justify-between font-body font-bold">
+        <span>Jami:</span>
+        <span class="text-yellow-400 price-tag">${formatPrice(getCartTotal())}</span>
+    </div>`;
+    
+    document.getElementById('checkoutModal').classList.remove('hidden');
+}
+
+function submitOrder() {
+    const name = document.getElementById('orderName').value.trim();
+    const phone = document.getElementById('orderPhone').value.trim();
+    const address = document.getElementById('orderAddress').value.trim();
+    
+    if (!name || !phone || !address) {
+        showToast('⚠️ Barcha maydonlarni to\'ldiring!', 'pink');
+        return;
+    }
+    
+    // Buyurtmani qayta ishlash
+    const orderId = Math.floor(Math.random() * 9000) + 1000;
+    
+    document.getElementById('checkoutModal').classList.add('hidden');
+    clearCart();
+    
+    showToast(`✅ Buyurtma #${orderId} qabul qilindi! Tez orada bog'lanamiz.`, 'gold');
+    
+    // Forma tozalash
+    ['orderName','orderPhone','orderAddress','orderComment'].forEach(id => {
+        document.getElementById(id).value = '';
+    });
+}
+
+// ============================================================
+// FILTER
+// ============================================================
+function filterCategory(cat) {
+    state.category = cat;
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.classList.remove('btn-gold');
+        btn.classList.add('btn-outline');
+    });
+    const activeBtn = document.getElementById(`cat-${cat}`);
+    if (activeBtn) {
+        activeBtn.classList.add('btn-gold');
+        activeBtn.classList.remove('btn-outline');
+    }
+    renderProducts();
+}
+
+function filterProducts() {
+    state.search = document.getElementById('searchInput').value;
+    renderProducts();
+}
+
+function sortProducts(val) {
+    state.sort = val;
+    renderProducts();
+}
+
+// ============================================================
+// BADGES
+// ============================================================
+function updateBadges() {
+    const cartCount = state.cart.reduce((s, i) => s + i.qty, 0);
+    const cartBadge = document.getElementById('cartBadge');
+    cartBadge.textContent = cartCount;
+    cartBadge.classList.toggle('hidden', cartCount === 0);
+    cartBadge.classList.toggle('flex', cartCount > 0);
+    
+    const wishlistCount = state.wishlist.length;
+    const wlBadge = document.getElementById('wishlistBadge');
+    wlBadge.textContent = wishlistCount;
+    wlBadge.classList.toggle('hidden', wishlistCount === 0);
+    wlBadge.classList.toggle('flex', wishlistCount > 0);
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg, type = 'gold') {
+    const colors = {
+        gold: 'border-yellow-500 bg-yellow-950/80 text-yellow-300',
+        cyan: 'border-cyan-500 bg-cyan-950/80 text-cyan-300',
+        pink: 'border-pink-500 bg-pink-950/80 text-pink-300',
+    };
+    const el = document.createElement('div');
+    el.className = `toast border rounded-xl px-4 py-3 font-body text-sm ${colors[type] || colors.gold} backdrop-blur-sm max-w-xs`;
+    el.textContent = msg;
+    document.getElementById('toastContainer').appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+}
+
+// ============================================================
+// MOBILE MENU
+// ============================================================
+function toggleMobileMenu() {
+    // Mobile search toggle
+    const searchDiv = document.createElement('div');
+}
+
+function scrollToProducts() {
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.getElementById('langSelect').value = state.lang;
+const savedCart = localStorage.getItem('evzap_cart');
+if (!savedCart || JSON.parse(savedCart).length === 0) {
+    saveCart();
+}
+changeLang(state.lang);
+renderProducts();
+renderCart();
+renderWishlist();
+updateBadges();
+</script>
+</body>
+</html>
