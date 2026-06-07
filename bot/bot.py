@@ -7,11 +7,13 @@ Mahsulotlar katalogi, savat, ko'p tilli interfeys
 import logging
 import json
 import os
+import threading
 from pathlib import Path
 from dotenv import load_dotenv
 from datetime import datetime
 
 load_dotenv()
+from flask import Flask
 from telegram import (
     Update, InlineKeyboardButton, InlineKeyboardMarkup,
     ReplyKeyboardMarkup, KeyboardButton, BotCommand,
@@ -1232,8 +1234,50 @@ async def process_checkout(update: Update, context: ContextTypes.DEFAULT_TYPE, c
     await update.message.reply_text(text, parse_mode="Markdown", reply_markup=confirm_order_keyboard(user_id))
 
 # ============================================================
+# RENDER UCHUN HTTP SERVER
+# ============================================================
+web_app = Flask(__name__)
+
+
+@web_app.route("/")
+def index():
+    return "EVZAP Bot ishlayapti ✅", 200
+
+
+@web_app.route("/health")
+def health():
+    return {"status": "ok", "service": "evzap-bot"}, 200
+
+
+# ============================================================
 # ASOSIY FUNKSIYA
 # ============================================================
+def build_application():
+    async def init_bot(application):
+        await setup_bot_commands(application.bot)
+
+    app = Application.builder().token(BOT_TOKEN).post_init(init_bot).build()
+
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("admin", admin_panel))
+    app.add_handler(CommandHandler("makeadmin", makeadmin_command))
+    app.add_handler(CommandHandler("admins", admins_command))
+    app.add_handler(CommandHandler("catalog", lambda u, c: show_catalog(u, c)))
+    app.add_handler(CommandHandler("cart", lambda u, c: show_cart_message(u, c)))
+    app.add_handler(CommandHandler("orders", lambda u, c: show_orders(u, c)))
+    app.add_handler(CommandHandler("profile", lambda u, c: show_profile(u, c)))
+    app.add_handler(CallbackQueryHandler(handle_callback))
+    app.add_handler(MessageHandler(filters.TEXT | filters.CONTACT, handle_message))
+
+    return app
+
+
+def run_telegram_bot():
+    application = build_application()
+    application.run_polling(allowed_updates=Update.ALL_TYPES, drop_pending_updates=True)
+
+
 def main():
     if BOT_TOKEN == "YOUR_BOT_TOKEN_HERE":
         print("❌ BOT_TOKEN o'rnatilmagan!")
@@ -1249,29 +1293,17 @@ def main():
     if seed_demo_cart(PRIMARY_ADMIN_ID):
         print(f"🛒 Demo savat to'ldirildi (admin ID: {PRIMARY_ADMIN_ID})")
 
-    async def init_bot(application):
-        await setup_bot_commands(application.bot)
-    
-    app = Application.builder().token(BOT_TOKEN).post_init(init_bot).build()
-    
-    # Handlerlar
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(CommandHandler("admin", admin_panel))
-    app.add_handler(CommandHandler("makeadmin", makeadmin_command))
-    app.add_handler(CommandHandler("admins", admins_command))
-    app.add_handler(CommandHandler("catalog", lambda u, c: show_catalog(u, c)))
-    app.add_handler(CommandHandler("cart", lambda u, c: show_cart_message(u, c)))
-    app.add_handler(CommandHandler("orders", lambda u, c: show_orders(u, c)))
-    app.add_handler(CommandHandler("profile", lambda u, c: show_profile(u, c)))
-    
-    app.add_handler(CallbackQueryHandler(handle_callback))
-    app.add_handler(MessageHandler(filters.TEXT | filters.CONTACT, handle_message))
-    
-    print("✅ Bot muvaffaqiyatli ishga tushdi!")
+    print("✅ Bot sozlandi!")
     print(f"👤 Adminlar: {', '.join(str(a) for a in sorted(admin_ids))}")
     print(f"📢 Kanal: {CHANNEL_ID}")
-    app.run_polling(allowed_updates=Update.ALL_TYPES, drop_pending_updates=True)
+
+    bot_thread = threading.Thread(target=run_telegram_bot, daemon=True, name="telegram-bot")
+    bot_thread.start()
+    print("🤖 Telegram bot fon rejimida ishga tushdi")
+
+    port = int(os.getenv("PORT", 10000))
+    print(f"🌐 HTTP server: http://0.0.0.0:{port}")
+    web_app.run(host="0.0.0.0", port=port)
 
 if __name__ == "__main__":
     main()
