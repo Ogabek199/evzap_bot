@@ -91,7 +91,7 @@ LANGUAGES = {
         "phone_saved": "✅ Telefon raqami saqlandi!",
         "enter_name": "👤 Ismingizni kiriting:",
         "name_saved": "✅ Ism saqlandi!",
-        "about_text": "🏢 EVZAP - Sizning ishonchli do'koningiz!\n\n✨ Biz sifatli mahsulotlarni qulay narxlarda taklif etamiz.\n\n📍 Manzil: Toshkent, O'zbekiston\n📞 Tel: +998 90 123 45 67\n📧 Email: info@evzap.uz",
+        "about_text": "🏢 EVZAP - Avto zapchastlar do'koni\n\n✨ Xitoy va O'zbekiston mashinalari uchun sifatli ehtiyot qismlar va aksessuarlar.\n\n📍 Manzil: Toshkent, O'zbekiston\n📞 Tel: +998 90 123 45 67\n📧 Email: info@evzap.uz",
         "contact_text": "📞 Biz bilan bog'laning:\n\n📱 Telegram: @evzap_support\n📞 Tel: +998 90 123 45 67\n📧 Email: info@evzap.uz\n\n⏰ Ish vaqti: 9:00 - 22:00",
         "no_orders": "📦 Hali buyurtmalaringiz yo'q",
         "order_id": "Buyurtma #",
@@ -145,7 +145,7 @@ LANGUAGES = {
         "phone_saved": "✅ Номер телефона сохранён!",
         "enter_name": "👤 Введите ваше имя:",
         "name_saved": "✅ Имя сохранено!",
-        "about_text": "🏢 EVZAP - Ваш надёжный магазин!\n\n✨ Мы предлагаем качественные товары по доступным ценам.\n\n📍 Адрес: Ташкент, Узбекистан\n📞 Тел: +998 90 123 45 67\n📧 Email: info@evzap.uz",
+        "about_text": "🏢 EVZAP - Магазин автозапчастей\n\n✨ Качественные запасные части и аксессуары для китайских и узбекских автомобилей.\n\n📍 Адрес: Ташкент, Узбекистан\n📞 Тел: +998 90 123 45 67\n📧 Email: info@evzap.uz",
         "contact_text": "📞 Свяжитесь с нами:\n\n📱 Telegram: @evzap_support\n📞 Тел: +998 90 123 45 67\n📧 Email: info@evzap.uz\n\n⏰ Время работы: 9:00 - 22:00",
         "no_orders": "📦 У вас пока нет заказов",
         "order_id": "Заказ #",
@@ -199,7 +199,7 @@ LANGUAGES = {
         "phone_saved": "✅ Phone number saved!",
         "enter_name": "👤 Enter your name:",
         "name_saved": "✅ Name saved!",
-        "about_text": "🏢 EVZAP - Your trusted store!\n\n✨ We offer quality products at affordable prices.\n\n📍 Address: Tashkent, Uzbekistan\n📞 Tel: +998 90 123 45 67\n📧 Email: info@evzap.uz",
+        "about_text": "🏢 EVZAP - Auto Parts Store\n\n✨ Quality spare parts and accessories for Chinese and Uzbekistan cars.\n\n📍 Address: Tashkent, Uzbekistan\n📞 Tel: +998 90 123 45 67\n📧 Email: info@evzap.uz",
         "contact_text": "📞 Contact us:\n\n📱 Telegram: @evzap_support\n📞 Tel: +998 90 123 45 67\n📧 Email: info@evzap.uz\n\n⏰ Working hours: 9:00 - 22:00",
         "no_orders": "📦 You have no orders yet",
         "order_id": "Order #",
@@ -230,116 +230,119 @@ LANGUAGES = {
 # MAHSULOTLAR MA'LUMOTLARI
 # ============================================================
 CATEGORIES = {
-    "electronics": {"uz": "📱 Elektronika", "ru": "📱 Электроника", "en": "📱 Electronics"},
-    "clothing": {"uz": "👔 Kiyim", "ru": "👔 Одежда", "en": "👔 Clothing"},
-    "food": {"uz": "🍎 Oziq-ovqat", "ru": "🍎 Продукты", "en": "🍎 Food"},
-    "home": {"uz": "🏠 Uy uchun", "ru": "🏠 Для дома", "en": "🏠 Home"},
-    "sports": {"uz": "⚽ Sport", "ru": "⚽ Спорт", "en": "⚽ Sports"},
-    "beauty": {"uz": "💄 Go'zallik", "ru": "💄 Красота", "en": "💄 Beauty"},
+    "engine": {"uz": "🔧 Dvigatel (mexanik qismlar)", "ru": "🔧 Двигатель (запчасти)", "en": "🔧 Engine (parts)"},
+    "brakes": {"uz": "🛑 Tormoz tizimi", "ru": "🛑 Тормозная система", "en": "🛑 Brakes"},
+    "filters": {"uz": "🧰 Filtrlar", "ru": "🧰 Фильтры", "en": "🧰 Filters"},
+    "suspension": {"uz": "🚗 Suspenziya (oshirish)", "ru": "🚗 Подвеска", "en": "🚗 Suspension"},
+    "electrical": {"uz": "⚡ Elektr tizimi", "ru": "⚡ Электрика", "en": "⚡ Electrical"},
+    "body": {"uz": "🚘 Korpus va tashqi qismlar", "ru": "🚘 Кузов и внешние части", "en": "🚘 Body & Exterior"},
+    "accessories": {"uz": "🔩 Aksessuarlar", "ru": "🔩 Аксессуары", "en": "🔩 Accessories"},
 }
+
 
 PRODUCTS = [
     {
-        "id": 1, "category": "electronics",
-        "name": {"uz": "Samsung Galaxy A54", "ru": "Samsung Galaxy A54", "en": "Samsung Galaxy A54"},
+        "id": 1, "category": "filters",
+        "name": {"uz": "Dvigatel havo filtri - Changan/Geely", "ru": "Воздушный фильтр двигателя - Changan/Geely", "en": "Engine Air Filter - Changan/Geely"},
         "desc": {
-            "uz": "6.4\" AMOLED, 128GB, 50MP kamera, 5000mAh batareya",
-            "ru": "6.4\" AMOLED, 128GB, камера 50МП, аккумулятор 5000мАч",
-            "en": "6.4\" AMOLED, 128GB, 50MP camera, 5000mAh battery"
+            "uz": "Changan va Geely modellariga mos havo filtri. Sifatli mato, uzaytirilgan xizmat muddati.",
+            "ru": "Фильтр подходит для моделей Changan и Geely. Качественный материал, увеличенный срок службы.",
+            "en": "Fits Changan and Geely models. High-quality media, extended service life."
         },
-        "price": 3299000, "image": "https://via.placeholder.com/300x300/gold/black?text=Samsung+A54", "stock": 15
+        "price": 150000, "image": "https://via.placeholder.com/300x300?text=Air+Filter", "stock": 120
     },
     {
-        "id": 2, "category": "electronics",
-        "name": {"uz": "Apple AirPods Pro", "ru": "Apple AirPods Pro", "en": "Apple AirPods Pro"},
+        "id": 2, "category": "brakes",
+        "name": {"uz": "Tormoz koptok to'plami - Nexia/Ravon", "ru": "Комплект тормозных колодок - Nexia/Ravon", "en": "Brake Pad Set - Nexia/Ravon"},
         "desc": {
-            "uz": "Aktiv shovqin bekor qilish, 30 soat batareya",
-            "ru": "Активное шумоподавление, 30 часов работы",
-            "en": "Active noise cancellation, 30 hours battery life"
+            "uz": "O'zbek bozorida keng tarqalgan Nexia va Ravon modellariga mos keladi. Barqaror tormozlash.",
+            "ru": "Подходит для популярных на узбекском рынке Nexia и Ravon. Стабильное торможение.",
+            "en": "Compatible with Nexia and Ravon models common in Uzbekistan. Stable braking performance."
         },
-        "price": 1899000, "image": "https://via.placeholder.com/300x300/gold/black?text=AirPods+Pro", "stock": 8
+        "price": 220000, "image": "https://via.placeholder.com/300x300?text=Brake+Pads", "stock": 80
     },
     {
-        "id": 3, "category": "clothing",
-        "name": {"uz": "Nike Air Max 270", "ru": "Nike Air Max 270", "en": "Nike Air Max 270"},
+        "id": 3, "category": "engine",
+        "name": {"uz": "Yoqilg'i nasosi - Lifan/Great Wall", "ru": "Топливный насос - Lifan/Great Wall", "en": "Fuel Pump - Lifan/Great Wall"},
         "desc": {
-            "uz": "Qulay sport poyabzal, o'lchamlar: 36-46",
-            "ru": "Удобные кроссовки, размеры: 36-46",
-            "en": "Comfortable sports shoes, sizes: 36-46"
+            "uz": "Xitoy ishlab chiqaruvchilari uchun mos nasos. Yuqori bosim va barqarorlik.",
+            "ru": "Насос для китайских производителей. Высокое давление и надежность.",
+            "en": "Pump suitable for Chinese manufacturers. High pressure and reliability."
         },
-        "price": 899000, "image": "https://via.placeholder.com/300x300/gold/black?text=Nike+Air+Max", "stock": 25
+        "price": 520000, "image": "https://via.placeholder.com/300x300?text=Fuel+Pump", "stock": 30
     },
     {
-        "id": 4, "category": "clothing",
-        "name": {"uz": "Adidas Hoodie", "ru": "Adidas Худи", "en": "Adidas Hoodie"},
+        "id": 4, "category": "suspension",
+        "name": {"uz": "Amortizator (old) - Universal", "ru": "Амортизатор (передний) - Универсальный", "en": "Shock Absorber (front) - Universal"},
         "desc": {
-            "uz": "Yumshoq paxta, o'lchamlar: S, M, L, XL, XXL",
-            "ru": "Мягкий хлопок, размеры: S, M, L, XL, XXL",
-            "en": "Soft cotton, sizes: S, M, L, XL, XXL"
+            "uz": "Yaxshi yopish va barqarorlik uchun mos amortizator. Ko'plab modellar bilan mos keladi.",
+            "ru": "Амортизатор для лучшей управляемости и комфорта. Совместим с многими моделями.",
+            "en": "Shock absorber for improved handling and comfort. Compatible with many models."
         },
-        "price": 459000, "image": "https://via.placeholder.com/300x300/gold/black?text=Adidas+Hoodie", "stock": 30
+        "price": 340000, "image": "https://via.placeholder.com/300x300?text=Shock+Absorber", "stock": 60
     },
     {
-        "id": 5, "category": "food",
-        "name": {"uz": "Premium Asal", "ru": "Премиум Мёд", "en": "Premium Honey"},
+        "id": 5, "category": "electrical",
+        "name": {"uz": "Svet xujayrasi - Far (H4)", "ru": "Фара H4", "en": "Headlight Bulb (H4)"},
         "desc": {
-            "uz": "Tabiiy tog' asali, 500g, sertifikatlangan",
-            "ru": "Натуральный горный мёд, 500г, сертифицированный",
-            "en": "Natural mountain honey, 500g, certified"
+            "uz": "Standart H4 far lampasi. Yorqin va uzoq umr ko'rish.",
+            "ru": "Стандартная лампа H4. Яркая и долговечная.",
+            "en": "Standard H4 headlamp bulb. Bright and long-lasting."
         },
-        "price": 89000, "image": "https://via.placeholder.com/300x300/gold/black?text=Premium+Honey", "stock": 50
+        "price": 45000, "image": "https://via.placeholder.com/300x300?text=H4+Bulb", "stock": 300
     },
     {
-        "id": 6, "category": "food",
-        "name": {"uz": "Organik Yong'oq", "ru": "Органические Орехи", "en": "Organic Nuts"},
+        "id": 6, "category": "filters",
+        "name": {"uz": "Yo'qilg'i filtri - UzAuto/Daewoo", "ru": "Топливный фильтр - UzAuto/Daewoo", "en": "Fuel Filter - UzAuto/Daewoo"},
         "desc": {
-            "uz": "Aralash yong'oqlar to'plami, 1kg",
-            "ru": "Смесь орехов, 1кг",
-            "en": "Mixed nuts collection, 1kg"
+            "uz": "UzAuto avtomobillari (Nexia va boshqa) uchun mos filtr. Yonilg'i tizimini himoya qiladi.",
+            "ru": "Фильтр для автомобилей UzAuto (Nexia и др.). Защищает топливную систему.",
+            "en": "Fits UzAuto vehicles (Nexia etc.). Protects the fuel system."
         },
-        "price": 129000, "image": "https://via.placeholder.com/300x300/gold/black?text=Organic+Nuts", "stock": 40
+        "price": 85000, "image": "https://via.placeholder.com/300x300?text=Fuel+Filter", "stock": 150
     },
     {
-        "id": 7, "category": "home",
-        "name": {"uz": "Philips Hue Lampa", "ru": "Лампа Philips Hue", "en": "Philips Hue Bulb"},
+        "id": 7, "category": "body",
+        "name": {"uz": "Old radio ramkasi - Geely/Changan", "ru": "Рамка радиопанели - Geely/Changan", "en": "Radio Dash Frame - Geely/Changan"},
         "desc": {
-            "uz": "Smart lampa, 16M rang, Wi-Fi boshqaruv",
-            "ru": "Умная лампа, 16М цветов, управление Wi-Fi",
-            "en": "Smart bulb, 16M colors, Wi-Fi control"
+            "uz": "To'g'ri o'rnatish uchun original o'rniga mos ramka.",
+            "ru": "Рамка для установки радиопанели вместо оригинала.",
+            "en": "Dash frame to fit radio unit in place of original."
         },
-        "price": 199000, "image": "https://via.placeholder.com/300x300/gold/black?text=Philips+Hue", "stock": 20
+        "price": 78000, "image": "https://via.placeholder.com/300x300?text=Dash+Frame", "stock": 45
     },
     {
-        "id": 8, "category": "sports",
-        "name": {"uz": "Fitness Tracker", "ru": "Фитнес Трекер", "en": "Fitness Tracker"},
+        "id": 8, "category": "accessories",
+        "name": {"uz": "Farg'ona mat - Avto oyog'ilar to'plami", "ru": "Коврики в салон", "en": "Car Floor Mats"},
         "desc": {
-            "uz": "Yurak urishi, uyqu monitoring, 7 kun batareya",
-            "ru": "Пульс, мониторинг сна, 7 дней работы",
-            "en": "Heart rate, sleep monitoring, 7 days battery"
+            "uz": "Suv o'tkazmaydigan va oson tozalanadigan avtomobil matlari (old+orqa).",
+            "ru": "Водонепроницаемые коврики, легко очищаются (передние+задние).",
+            "en": "Waterproof, easy-clean floor mats (front+rear)."
         },
-        "price": 349000, "image": "https://via.placeholder.com/300x300/gold/black?text=Fitness+Tracker", "stock": 12
+        "price": 129000, "image": "https://via.placeholder.com/300x300?text=Floor+Mats", "stock": 200
     },
     {
-        "id": 9, "category": "beauty",
-        "name": {"uz": "La Mer Krem", "ru": "Крем La Mer", "en": "La Mer Cream"},
+        "id": 9, "category": "engine",
+        "name": {"uz": "Spark-plug (bougie) - Universal", "ru": "Свеча зажигания - Универсальная", "en": "Spark Plug - Universal"},
         "desc": {
-            "uz": "Regeneratsiya kremi, 60ml, barcha teri turlari uchun",
-            "ru": "Регенерирующий крем, 60мл, для всех типов кожи",
-            "en": "Regenerating cream, 60ml, for all skin types"
+            "uz": "Ko'p modellar uchun mos yangi svetchik. Yonilg'i tejamkorligi va ish faoliyatini yaxshilaydi.",
+            "ru": "Подходит для многих моделей, улучшает экономичность и работу двигателя.",
+            "en": "Fits many models; improves fuel efficiency and engine performance."
         },
-        "price": 2299000, "image": "https://via.placeholder.com/300x300/gold/black?text=La+Mer", "stock": 5
+        "price": 22000, "image": "https://via.placeholder.com/300x300?text=Spark+Plug", "stock": 400
     },
     {
-        "id": 10, "category": "electronics",
-        "name": {"uz": "iPad Pro 11\"", "ru": "iPad Pro 11\"", "en": "iPad Pro 11\""},
+        "id": 10, "category": "electrical",
+        "name": {"uz": "Accumulator (akkumulyator) - 60Ah", "ru": "Аккумулятор 60Ah", "en": "Battery 60Ah"},
         "desc": {
-            "uz": "M2 chip, 256GB, Liquid Retina ekran",
-            "ru": "Чип M2, 256ГБ, дисплей Liquid Retina",
-            "en": "M2 chip, 256GB, Liquid Retina display"
+            "uz": "Ishonchli 60Ah akkumulyator, sovuq havoga mos. Shahar va qish sharoitlariga mos.",
+            "ru": "Надежный аккумулятор 60Ah, устойчив к холодам. Для города и зимы.",
+            "en": "Reliable 60Ah battery, cold-resistant. Suitable for city and winter use."
         },
-        "price": 8999000, "image": "https://via.placeholder.com/300x300/gold/black?text=iPad+Pro", "stock": 7
+        "price": 790000, "image": "https://via.placeholder.com/300x300?text=Battery+60Ah", "stock": 25
     },
 ]
+
 
 # ============================================================
 # FOYDALANUVCHILAR MA'LUMOTLARI (xotirada saqlash)
