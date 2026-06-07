@@ -1271,7 +1271,7 @@ def main():
     print("✅ Bot muvaffaqiyatli ishga tushdi!")
     print(f"👤 Adminlar: {', '.join(str(a) for a in sorted(admin_ids))}")
     print(f"📢 Kanal: {CHANNEL_ID}")
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    app.run_polling(allowed_updates=Update.ALL_TYPES, drop_pending_updates=True)
 
 if __name__ == "__main__":
     main()

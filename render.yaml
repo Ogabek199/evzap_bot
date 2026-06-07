@@ -1,0 +1,14 @@
+services:
+  - type: worker
+    name: evzap-bot
+    runtime: python
+    plan: free
+    buildCommand: pip install -r bot/requirements.txt
+    startCommand: python bot/bot.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_IDS
+        value: 5764200653,7543890834,7771425889
+      - key: CHANNEL_ID
+        value: "@evzap_ecommerce_bot"
